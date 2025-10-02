@@ -618,16 +618,16 @@
             let message = '';
             if (percentage >= 80) {
                 scoreCircle.className = 'score-circle excellent';
-                message = '🎉 Excellent! You\'re a quiz master!';
+                message = 'Excellent! You\'re a quiz master!';
             } else if (percentage >= 60) {
                 scoreCircle.className = 'score-circle good';
-                message = '👍 Good job! You did well!';
+                message = 'Good job! You did well!';
             } else if (percentage >= 40) {
                 scoreCircle.className = 'score-circle average';
-                message = '💪 Not bad! Keep practicing!';
+                message = 'Not bad! Keep practicing!';
             } else {
                 scoreCircle.className = 'score-circle poor';
-                message = '📚 Don\'t give up! Try again!';
+                message = 'Don\'t give up! Try again!';
             }
 
             document.getElementById('results-message').textContent = message;
