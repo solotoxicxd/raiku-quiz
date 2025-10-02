@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Octra Quiz</title>
+    <title>Raiku Quiz</title>
     <style>
         * {
             margin: 0;
@@ -14,7 +14,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(0deg, rgb(43, 0, 184) 0%, rgb(0, 17, 255) 100%);
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -23,13 +23,14 @@
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(20, 20, 20, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            border: 2px solid #c0ff38;
             width: 100%;
             max-width: 800px;
             padding: 40px;
+            box-shadow: 0 20px 60px rgba(192, 255, 56, 0.15);
             transition: all 0.3s ease;
         }
 
@@ -39,17 +40,28 @@
         }
 
         .logo {
-            background-color: blue;
+            background: linear-gradient(45deg, #c0ff38, #a8e030);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
             font-size: 2.5rem;
             font-weight: bold;
             margin-bottom: 10px;
         }
 
         .subtitle {
-            color: #666;
-            font-size: 1.1rem;
+            color: #888;
+            font-size: 1rem;
+        }
+
+        .subtitle a {
+            color: #c0ff38;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .subtitle a:hover {
+            color: #a8e030;
         }
 
         .quiz-section {
@@ -66,7 +78,6 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -76,35 +87,38 @@
         .question-counter {
             text-align: center;
             margin-bottom: 20px;
-            color: #666;
-            font-size: 0.9rem;
+            color: #c0ff38;
+            font-size: 1rem;
+            font-weight: 600;
         }
 
         .progress-bar {
-            height: 6px;
-            background: #e0e0e0;
-            border-radius: 3px;
+            height: 8px;
+            background: rgba(192, 255, 56, 0.1);
+            border-radius: 4px;
             margin-bottom: 30px;
             overflow: hidden;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(45deg, #667eea, #0022ff);
+            background: linear-gradient(90deg, #c0ff38, #a8e030);
             width: 0%;
             transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(192, 255, 56, 0.5);
         }
 
         .question {
-            background: #f8f9fa;
+            background: rgba(192, 255, 56, 0.05);
+            color: #fff;
             padding: 25px;
             border-radius: 15px;
             margin-bottom: 25px;
-            border-left: 5px solid #002fff;
+            border-left: 5px solid #c0ff38;
         }
 
         .question h3 {
-            color: #333;
+            color: #fff;
             font-size: 1.3rem;
             line-height: 1.5;
             margin-bottom: 20px;
@@ -116,8 +130,9 @@
         }
 
         .option {
-            background: white;
-            border: 2px solid #e0e0e0;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(192, 255, 56, 0.3);
+            color: #fff;
             border-radius: 12px;
             padding: 15px 20px;
             cursor: pointer;
@@ -127,51 +142,45 @@
         }
 
         .option:hover {
-            border-color: #667eea;
+            border-color: #c0ff38;
+            background: rgba(192, 255, 56, 0.1);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+            box-shadow: 0 5px 15px rgba(192, 255, 56, 0.2);
         }
 
         .option.selected {
-            border-color: #667eea;
-            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-color: #c0ff38;
+            background: rgba(192, 255, 56, 0.15);
         }
 
         .option.correct {
             border-color: #4CAF50;
-            background: linear-gradient(45deg, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.2));
+            background: rgba(76, 175, 80, 0.2);
             animation: correctPulse 0.6s ease;
         }
 
         .option.incorrect {
             border-color: #f44336;
-            background: linear-gradient(45deg, rgba(244, 67, 54, 0.1), rgba(244, 67, 54, 0.2));
+            background: rgba(244, 67, 54, 0.2);
             animation: incorrectShake 0.6s ease;
         }
 
         @keyframes correctPulse {
-
-            0%,
-            100% {
+            0%, 100% {
                 transform: scale(1);
             }
-
             50% {
                 transform: scale(1.02);
             }
         }
 
         @keyframes incorrectShake {
-
-            0%,
-            100% {
+            0%, 100% {
                 transform: translateX(0);
             }
-
             25% {
                 transform: translateX(-5px);
             }
-
             75% {
                 transform: translateX(5px);
             }
@@ -187,45 +196,48 @@
         }
 
         .feedback.correct {
-            background: rgba(76, 175, 80, 0.1);
+            background: rgba(76, 175, 80, 0.2);
             color: #4CAF50;
             border: 2px solid #4CAF50;
         }
 
         .feedback.incorrect {
-            background: rgba(244, 67, 54, 0.1);
+            background: rgba(244, 67, 54, 0.2);
             color: #f44336;
             border: 2px solid #f44336;
         }
 
         .buttons {
             text-align: center;
-            margin-top: 30px;
         }
 
         .btn {
-            background: blue;
-            color: white;
+            background: linear-gradient(45deg, #c0ff38, #a8e030);
+            color: #000;
             border: none;
-            padding: 15px 30px;
+            padding: 15px 35px;
             border-radius: 50px;
             font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin: 0 10px;
+            box-shadow: 0 4px 15px rgba(192, 255, 56, 0.3);
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 25px rgba(192, 255, 56, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
         }
 
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none;
-            box-shadow: none;
+            box-shadow: 0 4px 15px rgba(192, 255, 56, 0.2);
         }
 
         .start-screen {
@@ -233,13 +245,13 @@
         }
 
         .start-screen h2 {
-            color: #333;
+            color: #c0ff38;
             margin-bottom: 20px;
-            font-size: 1.8rem;
+            font-size: 2rem;
         }
 
         .start-screen p {
-            color: #666;
+            color: #aaa;
             margin-bottom: 30px;
             font-size: 1.1rem;
             line-height: 1.6;
@@ -247,6 +259,12 @@
 
         .results-screen {
             text-align: center;
+        }
+
+        .results-screen h2 {
+            color: #c0ff38;
+            margin-bottom: 20px;
+            font-size: 2rem;
         }
 
         .score-circle {
@@ -258,42 +276,59 @@
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: bold;
             color: white;
             position: relative;
             overflow: hidden;
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
         }
 
         .score-circle.excellent {
-            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            box-shadow: 0 10px 40px rgba(76, 175, 80, 0.4);
         }
 
         .score-circle.good {
-            background: linear-gradient(45deg, #FF9800, #FFC107);
+            background: linear-gradient(135deg, #FF9800, #FFC107);
+            box-shadow: 0 10px 40px rgba(255, 152, 0, 0.4);
         }
 
         .score-circle.average {
-            background: linear-gradient(45deg, #2196F3, #03A9F4);
+            background: linear-gradient(135deg, #2196F3, #03A9F4);
+            box-shadow: 0 10px 40px rgba(33, 150, 243, 0.4);
         }
 
         .score-circle.poor {
-            background: linear-gradient(45deg, #f44336, #FF5722);
+            background: linear-gradient(135deg, #f44336, #FF5722);
+            box-shadow: 0 10px 40px rgba(244, 67, 54, 0.4);
         }
 
         .score-text {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             margin-top: 5px;
+            opacity: 0.9;
         }
 
         .results-message {
-            color: #333;
+            color: #c0ff38;
             font-size: 1.3rem;
             margin: 20px 0;
+            font-weight: 600;
         }
 
         .results-breakdown {
-            background: #f8f9fa;
+            background: rgba(192, 255, 56, 0.05);
+            border: 1px solid rgba(192, 255, 56, 0.2);
             border-radius: 15px;
             padding: 25px;
             margin: 20px 0;
@@ -302,17 +337,19 @@
         .breakdown-item {
             display: flex;
             justify-content: space-between;
-            margin: 10px 0;
+            margin: 15px 0;
             font-size: 1.1rem;
+            color: #aaa;
         }
 
         .breakdown-item strong {
-            color: #333;
+            color: #c0ff38;
+            font-size: 1.2rem;
         }
 
         @media (max-width: 600px) {
             .container {
-                padding: 20px;
+                padding: 25px;
             }
 
             .logo {
@@ -321,12 +358,23 @@
 
             .option {
                 padding: 12px 15px;
+                font-size: 0.95rem;
             }
 
             .score-circle {
-                width: 150px;
-                height: 150px;
-                font-size: 1.5rem;
+                width: 160px;
+                height: 160px;
+                font-size: 2rem;
+            }
+
+            .start-screen h2,
+            .results-screen h2 {
+                font-size: 1.6rem;
+            }
+
+            .btn {
+                padding: 12px 28px;
+                font-size: 1rem;
             }
         }
     </style>
@@ -335,14 +383,13 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="logo">Octra Quiz</div>
-            <div class="subtitle">Made By <a href="https://x.com/bytrizz404" target="_blank"
-                    style="text-decoration: none;">Bytrizz</a></div>
+            <div class="logo">Raiku Quiz</div>
+            <div class="subtitle">Made By <a href="https://x.com/bytrizz404" target="_blank">Bytrizz</a></div>
         </div>
 
         <!-- Start Screen -->
         <div id="start-screen" class="quiz-section active start-screen">
-            <h2>Welcome to Octra Quiz!</h2>
+            <h2>Welcome to Raiku Quiz!</h2>
             <p>Test your knowledge with our interactive quiz. You'll get immediate feedback on each question and see
                 your final score at the end.</p>
             <div class="buttons">
@@ -353,7 +400,7 @@
         <!-- Quiz Screen -->
         <div id="quiz-screen" class="quiz-section">
             <div class="question-counter">
-                <span id="current-question">1</span> of <span id="total-questions">10</span>
+                Question <span id="current-question">1</span> of <span id="total-questions">10</span>
             </div>
 
             <div class="progress-bar">
@@ -362,8 +409,7 @@
 
             <div class="question">
                 <h3 id="question-text"></h3>
-                <div class="options" id="options-container">
-                </div>
+                <div class="options" id="options-container"></div>
             </div>
 
             <div class="feedback" id="feedback"></div>
@@ -406,7 +452,6 @@
     </div>
 
     <script>
-        // Quiz data
         const quizData = [
             {
                 question: "What blockchain is Raiku built on?",
@@ -480,17 +525,16 @@
             }
         ];
 
-
-
         let currentQuestion = 0;
         let score = 0;
         let selectedOption = -1;
-        let quizCompleted = false;
 
         function startQuiz() {
             document.getElementById('start-screen').classList.remove('active');
             document.getElementById('quiz-screen').classList.add('active');
             document.getElementById('total-questions').textContent = quizData.length;
+            currentQuestion = 0;
+            score = 0;
             loadQuestion();
         }
 
@@ -515,11 +559,9 @@
                 optionsContainer.appendChild(optionElement);
             });
 
-            // Update progress bar
             const progress = ((currentQuestion) / quizData.length) * 100;
             document.getElementById('progress-fill').style.width = progress + '%';
 
-            // Reset UI
             selectedOption = -1;
             document.getElementById('next-btn').disabled = true;
             document.getElementById('feedback').style.display = 'none';
@@ -527,13 +569,12 @@
         }
 
         function selectOption(index) {
-            if (selectedOption !== -1) return; // Prevent multiple selections
+            if (selectedOption !== -1) return;
 
             selectedOption = index;
             const options = document.querySelectorAll('.option');
             const question = quizData[currentQuestion];
 
-            // Show correct/incorrect feedback
             options.forEach((option, i) => {
                 if (i === question.correct) {
                     option.classList.add('correct');
@@ -543,14 +584,13 @@
                 option.style.pointerEvents = 'none';
             });
 
-            // Update score and show feedback
             const feedback = document.getElementById('feedback');
             if (selectedOption === question.correct) {
                 score++;
-                feedback.textContent = 'Correct! Well done!';
+                feedback.textContent = '✓ Correct! Well done!';
                 feedback.className = 'feedback correct';
             } else {
-                feedback.textContent = `Incorrect. The correct answer is: ${question.options[question.correct]}`;
+                feedback.textContent = `✗ Incorrect. The correct answer is: ${question.options[question.correct]}`;
                 feedback.className = 'feedback incorrect';
             }
 
@@ -560,7 +600,7 @@
 
         function nextQuestion() {
             currentQuestion++;
-            setTimeout(loadQuestion, 300); // Small delay for smooth transition
+            setTimeout(loadQuestion, 300);
         }
 
         function showResults() {
@@ -575,20 +615,19 @@
             document.getElementById('incorrect-count').textContent = quizData.length - score;
             document.getElementById('total-count').textContent = quizData.length;
 
-            // Set score circle color and message based on performance
             let message = '';
             if (percentage >= 80) {
                 scoreCircle.className = 'score-circle excellent';
-                message = 'Excellent! You\'re a quiz master!';
+                message = '🎉 Excellent! You\'re a quiz master!';
             } else if (percentage >= 60) {
                 scoreCircle.className = 'score-circle good';
-                message = 'Good job! You did well!';
+                message = '👍 Good job! You did well!';
             } else if (percentage >= 40) {
                 scoreCircle.className = 'score-circle average';
-                message = 'Not bad! Keep practicing!';
+                message = '💪 Not bad! Keep practicing!';
             } else {
                 scoreCircle.className = 'score-circle poor';
-                message = 'Don\'t give up! Try again!';
+                message = '📚 Don\'t give up! Try again!';
             }
 
             document.getElementById('results-message').textContent = message;
